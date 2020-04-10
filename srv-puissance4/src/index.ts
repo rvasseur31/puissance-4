@@ -5,7 +5,6 @@ import { factory } from "./utils/ConfigLog4j";
 import { RootController } from './controllers/root.controller';
 import { errorMiddleware } from './middlewares/error.middleware';
 import * as http from "http";
-import { socketConnection } from './controllers/socket.controller';
 
 // create connection with database
 // note that it's not active database connection
@@ -34,7 +33,7 @@ createConnection({
     /**
      * Port used to reach server.
      */
-    const port = 7070;
+    const port = process.env.PORT || 3000;
 
     app.use(function (req, res, next) {
         // Website you wish to allow to connect
@@ -72,18 +71,14 @@ createConnection({
      */
     const server = http.createServer(app);
 
-    /**
-     * Pass a http.Server instance to the listen method. 
-     */
-    const io = require('socket.io').listen(server);
+    const WebSocket = require('ws');
+    const wss = new WebSocket.Server({ port: port });
 
-    /**
-     * Server starting.
-     * Listening on port specified.
-     */
-    server.listen(port);
-
-    io.on('connection', socketConnection);
-
+    wss.on('connection', (ws:any) => {
+        console.log("connected");
+        ws.on('message', (message:String) => {
+            console.log('received: %s', message);
+        });
+    });
     LOGGER.info(`Server listening on port : ${port}`)
 }).catch(error => console.log("TypeORM connection error: ", error));

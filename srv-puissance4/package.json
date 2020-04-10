@@ -26,9 +26,9 @@
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
     "reflect-metadata": "^0.1.13",
-    "socket.io": "^2.3.0",
     "typeorm": "^0.2.24",
-    "typescript-logging": "^0.6.4"
+    "typescript-logging": "^0.6.4",
+    "ws": "^7.2.3"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
