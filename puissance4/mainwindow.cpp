@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include <QDebug>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::MainWindow)
@@ -11,45 +12,83 @@ MainWindow::MainWindow(QWidget *parent) :
     if (m_debug)
         qDebug() << "WebSocket server:" << url;
     m_webSocket->open(url);
-//    connect(m_webSocket, &QWebSocket::connected, this, &MainWindow::onConnected);
-//    connect(m_webSocket, &QWebSocket::disconnected, this, &MainWindow::onClosed);
     connect(m_webSocket, SIGNAL(connected()), this, SLOT(isConnected()));
     connect(m_webSocket, SIGNAL(sslErrors(QList<QSslError>)), this, SLOT(sslError(QList<QSslError>)));
     connect(m_webSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(logError(QAbstractSocket::SocketError)));
     connect(m_webSocket, SIGNAL(textMessageReceived(QString)), this, SLOT(newMessage(QString)));
-    connect(m_webSocket, SIGNAL(textFrameReceived(QString,bool)), this, SLOT(newMessageBit(QString,bool)));
 }
 
-
 MainWindow::~MainWindow() {
+    qDebug() << __FUNCTION__<< "Destructor";
+    m_webSocket->sendTextMessage(sendSocketData("participant-left", userData["pseudo"].toString(), ""));
     m_webSocket->close();
     delete ui;
 }
 
-//void MainWindow::onConnected()
-//{
-//    if (m_debug)
-//        qDebug() << "WebSocket connected";
-//    connect(m_webSocket, &QWebSocket::textMessageReceived,
-//            this, &MainWindow::onTextMessageReceived);
-//    m_webSocket->sendTextMessage(QStringLiteral("Hello, world!"));
-//}
+void MainWindow::getUserData(QJsonObject userData)
+{
+    this->userData = userData;
+}
 
-//void MainWindow::onTextMessageReceived(QString message)
-//{
-//    if (m_debug)
-//        qDebug() << "Message received:" << message;
-//    m_webSocket->close();
-//}
+void MainWindow::appendMessage(const QString &from, const QString &message)
+{
+    if (from.isEmpty() || message.isEmpty())
+        return;
+    QTextCursor cursor(ui->textEdit_users_messages->textCursor());
+    cursor.movePosition(QTextCursor::End);
+    QTextTable *table = cursor.insertTable(1, 2, tableFormat);
+    table->cellAt(0, 0).firstCursorPosition().insertText('<' + from + "> ");
+    table->cellAt(0, 1).firstCursorPosition().insertText(message);
+    QScrollBar *bar = ui->textEdit_users_messages->verticalScrollBar();
+    bar->setValue(bar->maximum());
+}
 
-//void MainWindow::onClosed()
-//{
-//    m_webSocket->close();
-//}
+void MainWindow::newParticipant(const QString &nick)
+{
+    if (nick.isEmpty())
+        return;
+    QColor color = ui->textEdit_users_messages->textColor();
+    ui->textEdit_users_messages->setTextColor(Qt::gray);
+    ui->textEdit_users_messages->append(tr("* %1 has joined").arg(nick));
+    ui->textEdit_users_messages->setTextColor(color);
+}
+
+void MainWindow::setParticipants(QJsonArray participants) {
+    ui->listWidget->clear();
+    for (int index = 0; index < participants.size(); index++) {
+         ui->listWidget->addItem(participants.at(index).toString());
+    }
+}
+
+void MainWindow::participantLeft(const QString &nick)
+{
+    if (nick.isEmpty())
+        return;
+    QList<QListWidgetItem *> items = ui->listWidget->findItems(nick,
+                                                           Qt::MatchExactly);
+    if (items.isEmpty())
+        return;
+
+    delete items.at(0);
+    QColor color = ui->textEdit_users_messages->textColor();
+    ui->textEdit_users_messages->setTextColor(Qt::gray);
+    ui->textEdit_users_messages->append(tr("* %1 has left").arg(nick));
+    ui->textEdit_users_messages->setTextColor(color);
+}
+
+void MainWindow::showInformation()
+{
+    if (ui->listWidget->count() == 1) {
+        QMessageBox::information(this, tr("Chat"),
+                                 tr("Launch several instances of this "
+                                    "program on your local network and "
+                                    "start chatting!"));
+    }
+}
 
 void MainWindow::isConnected()
 {
-       m_webSocket->sendTextMessage("Hello From Qt!!!");
+    m_webSocket->sendTextMessage(sendSocketData("new-participant", userData["pseudo"].toString(), ""));
 }
 
 void MainWindow::logError(QAbstractSocket::SocketError err)
@@ -68,16 +107,43 @@ void MainWindow::sslError(QList<QSslError> errors)
 
 void MainWindow::newMessage(QString msg)
 {
-       qDebug() << msg;
+       qDebug() << __LINE__ <<msg;
+       QJsonDocument doc = QJsonDocument::fromJson(msg.toUtf8());
+       QJsonObject json = doc.object();
+       if (json["action"] == "new-participant") {
+           setParticipants(json["participants"].toArray());
+           newParticipant(json["sender"].toString());
+       } else if (json["action"] == "participant-left") {
+           participantLeft(json["sender"].toString());
+       } else if (json["action"] == "new-message") {
+           appendMessage(json["sender"].toString(), json["message"].toString());
+       }
 }
 
-void MainWindow::newMessageBit(QString msg, bool isLast)
+void MainWindow::on_lineEdit_message_to_send_returnPressed()
 {
-       qDebug() << msg;
-       qDebug() << isLast;
+    QString text = ui->lineEdit_message_to_send->text();
+    if (text.isEmpty())
+        return;
+
+    if (text.startsWith(QChar('/'))) {
+        QColor color = ui->textEdit_users_messages->textColor();
+        ui->textEdit_users_messages->setTextColor(Qt::red);
+        ui->textEdit_users_messages->append(tr("! Unknown command: %1")
+                         .arg(text.left(text.indexOf(' '))));
+        ui->textEdit_users_messages->setTextColor(color);
+    } else {
+        m_webSocket->sendTextMessage(sendSocketData("new-message", nickname, text));
+    }
+
+    ui->lineEdit_message_to_send->clear();
 }
 
-
-
-
-
+QString MainWindow::sendSocketData(QString action, QString from, QString message) {
+    QJsonObject jsonObject;
+    jsonObject["action"] = action;
+    jsonObject["sender"] = from;
+    jsonObject["message"] = message;
+    QJsonDocument doc(jsonObject);
+    return QLatin1String(doc.toJson(QJsonDocument::Compact));
+}

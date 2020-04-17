@@ -5,10 +5,10 @@ import { factory } from "./utils/ConfigLog4j";
 import { RootController } from './controllers/root.controller';
 import { errorMiddleware } from './middlewares/error.middleware';
 import * as http from "http";
+import WebSocket from 'ws';
 
-// create connection with database
-// note that it's not active database connection
-// TypeORM creates connection pools and uses them for your requests
+var participants = [];
+
 createConnection({
     "type": "mysql",
     "host": "remotemysql.com",
@@ -33,7 +33,7 @@ createConnection({
     /**
      * Port used to reach server.
      */
-    const port = process.env.PORT || 3000;
+    const port = 3000;
 
     app.use(function (req, res, next) {
         // Website you wish to allow to connect
@@ -57,7 +57,7 @@ createConnection({
     app.use(express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
 
     /**
-     * 
+     * Middleware to use the api.
      */
     app.use('/api', RootController);
 
@@ -70,15 +70,49 @@ createConnection({
      * Create http server.
      */
     const server = http.createServer(app);
+    /**
+     * Create websocket server.
+     */
+    const wss = new WebSocket.Server({ server });
 
-    const WebSocket = require('ws');
-    const wss = new WebSocket.Server({ port: port });
-
-    wss.on('connection', (ws:any) => {
-        console.log("connected");
-        ws.on('message', (message:String) => {
-            console.log('received: %s', message);
+    wss.on('connection', (ws: any) => {
+        ws.on('message', (message: string) => {
+            let json = JSON.parse(message);
+            if (json.action == "new-participant") {
+                participants.push(json.sender);
+                json["participants"] = participants;
+                broadcastSocket(JSON.stringify(json));
+            } else if (json.action == "participant-left") {
+                console.log(json);
+                participants = participants.filter(participant => participant !== json.sender);
+                json["participants"] = participants;
+                ws.close();
+                broadcastSocket(JSON.stringify(json));
+                console.log("participants : "+participants);
+            } else if (json.action == "new-message") {
+                broadcastSocket(message);
+            }
         });
+
+        ws.on("close", (client:any) => {
+            console.log("client : " + client);
+            console.log("closed");
+        })
     });
-    LOGGER.info(`Server listening on port : ${port}`)
+
+    const broadcastSocket = (message: string) => {
+        wss.clients.forEach(function each(client) {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(message);
+            }
+        });
+    }
+
+    /**
+     * Server starting.
+     * Listening on port specified.
+     */
+    server.listen(process.env.PORT || port, () => {
+        LOGGER.info(`Server is listening on ${port}`);
+    });
 }).catch(error => console.log("TypeORM connection error: ", error));

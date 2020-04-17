@@ -2,6 +2,12 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QTextTable>
+#include <QTextTableFormat>
+#include <QScrollBar>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 #include <QtWebSockets/QWebSocket>
 
 namespace Ui {
@@ -11,25 +17,34 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+    QJsonObject userData;
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+public slots:
+    void getUserData(QJsonObject userData);
 
 private slots:
-//    void onConnected();
-//    void onTextMessageReceived(QString message);
-//    void onClosed();
     void isConnected();
     void logError(QAbstractSocket::SocketError err);
     void sslError(QList<QSslError> errors);
-    void newMessage(QString msg);
-    void newMessageBit(QString msg, bool isLast);
+    void newMessage(QString msg); void on_lineEdit_message_to_send_returnPressed();
+
 private:
     bool m_debug = true;
     QWebSocket *m_webSocket;
     QUrl url = QUrl(QStringLiteral("ws://localhost:3000"));
-    Ui::MainWindow *ui;
+    QString nickname = "rvasseur";
+    QTextTableFormat tableFormat;
+    Ui::MainWindow *ui; 
 
+
+    void appendMessage(const QString &from, const QString &message);
+    void newParticipant(const QString &nick);
+    void participantLeft(const QString &nick);
+    void showInformation();
+    QString sendSocketData(QString action, QString from, QString message);
+    void setParticipants(QJsonArray participants);
 };
 #endif // MAINWINDOW_H
