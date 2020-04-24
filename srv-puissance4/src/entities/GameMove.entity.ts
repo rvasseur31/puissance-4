@@ -19,13 +19,13 @@ export class GameMove implements IGameMove {
      */
     @OneToOne(type => User)
     @JoinColumn()
-    user_id: User;
+    user: User;
 
     /**
      * Room id.
      */
     @ManyToOne(type => Room, room => room.gameMoves)
-    room_id: Room;
+    room: Room;
 
     /**
      * User move.

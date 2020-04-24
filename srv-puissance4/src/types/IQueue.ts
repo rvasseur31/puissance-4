@@ -9,12 +9,7 @@ export interface IQueue {
     /**
      * User id
      */
-    users: User[];
-
-    /**
-     * User pseudo.
-     */
-    pseudo: string;
+    user: User;
 
     /**
      * Timestamp when user entered in the queue.

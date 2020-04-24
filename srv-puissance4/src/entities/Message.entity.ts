@@ -18,13 +18,13 @@ export class Message implements IMessage {
      * Room id.
      */
     @ManyToOne(type => Room, room => room.messages)
-    room_id: Room;
+    room: Room;
 
     /**
      * Id of the user who sent the message.
      */
     @ManyToOne(type => User, user => user.messages)
-    user_id: User;
+    user: User;
 
     /**
      * Message.

@@ -36,7 +36,7 @@ export class User implements IUser {
     /**
      * User messages.
      */
-    @OneToMany(type => Message, message => message.user_id, {
+    @OneToMany(type => Message, message => message.user, {
         nullable: true
     })
     messages: Message[];
@@ -48,15 +48,6 @@ export class User implements IUser {
         nullable: true
     })
     room: Room;
-
-    /**
-     * Current user queue.
-     */
-    @ManyToOne(type => Queue, queue => queue.users, {
-        nullable: true
-    })
-    queue: Queue;
-
 
     /**
      * Constructor.

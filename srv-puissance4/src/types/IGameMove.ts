@@ -10,12 +10,12 @@ export interface IGameMove {
     /**
      * Room id.
      */
-    room_id: Room;
+    room: Room;
 
     /**
      * User who played.
      */
-    user_id: User;
+    user: User;
 
     /**
      * Move.

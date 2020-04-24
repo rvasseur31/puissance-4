@@ -33,12 +33,12 @@ export class Room implements IRoom {
     /**
      * Messages of the room.
      */
-    @OneToMany(type => Message, message => message.room_id)
+    @OneToMany(type => Message, message => message.room)
     messages: Message[]
 
     /**
      * List of users moves
      */
-    @OneToMany(type => GameMove, gameMove => gameMove.room_id)
+    @OneToMany(type => GameMove, gameMove => gameMove.room)
     gameMoves: GameMove[]
 }

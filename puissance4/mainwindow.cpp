@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow() {
     qDebug() << __FUNCTION__<< "Destructor";
-    m_webSocket->sendTextMessage(sendSocketData("participant-left", userData["pseudo"].toString(), ""));
+    m_webSocket->sendTextMessage(sendSocketData("participant-left",userData["id"].toInt(), userData["pseudo"].toString(), ""));
     m_webSocket->close();
     delete ui;
 }
@@ -88,7 +88,7 @@ void MainWindow::showInformation()
 
 void MainWindow::isConnected()
 {
-    m_webSocket->sendTextMessage(sendSocketData("new-participant", userData["pseudo"].toString(), ""));
+    m_webSocket->sendTextMessage(sendSocketData("new-participant",userData["id"].toInt(), userData["pseudo"].toString(), ""));
 }
 
 void MainWindow::logError(QAbstractSocket::SocketError err)
@@ -133,16 +133,17 @@ void MainWindow::on_lineEdit_message_to_send_returnPressed()
                          .arg(text.left(text.indexOf(' '))));
         ui->textEdit_users_messages->setTextColor(color);
     } else {
-        m_webSocket->sendTextMessage(sendSocketData("new-message", nickname, text));
+        m_webSocket->sendTextMessage(sendSocketData("new-message", userData["id"].toInt(), userData["pseudo"].toString(), text));
     }
 
     ui->lineEdit_message_to_send->clear();
 }
 
-QString MainWindow::sendSocketData(QString action, QString from, QString message) {
+QString MainWindow::sendSocketData(QString action, int id, QString pseudo, QString message) {
     QJsonObject jsonObject;
     jsonObject["action"] = action;
-    jsonObject["sender"] = from;
+    jsonObject["sender_id"] = id;
+    jsonObject["sender_pseudo"] = pseudo;
     jsonObject["message"] = message;
     QJsonDocument doc(jsonObject);
     return QLatin1String(doc.toJson(QJsonDocument::Compact));

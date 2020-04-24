@@ -10,12 +10,12 @@ export interface IMessage {
     /**
      * Room id.
      */
-    room_id: Room;
+    room: Room;
 
     /**
      * Id of the user who sent the message.
      */
-    user_id: User;
+    user: User;
 
     /**
      * Message.

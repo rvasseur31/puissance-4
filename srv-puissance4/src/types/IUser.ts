@@ -32,9 +32,4 @@ export interface IUser {
      * Current user room.
      */
     room: Room;
-
-    /**
-     * Current user queue.
-     */
-    queue: Queue;
 }

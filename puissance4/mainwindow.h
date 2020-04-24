@@ -35,7 +35,6 @@ private:
     bool m_debug = true;
     QWebSocket *m_webSocket;
     QUrl url = QUrl(QStringLiteral("ws://localhost:3000"));
-    QString nickname = "rvasseur";
     QTextTableFormat tableFormat;
     Ui::MainWindow *ui; 
 
@@ -44,7 +43,7 @@ private:
     void newParticipant(const QString &nick);
     void participantLeft(const QString &nick);
     void showInformation();
-    QString sendSocketData(QString action, QString from, QString message);
+    QString sendSocketData(QString action, int id, QString pseudo, QString message);
     void setParticipants(QJsonArray participants);
 };
 #endif // MAINWINDOW_H
