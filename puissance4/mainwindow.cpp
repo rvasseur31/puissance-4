@@ -112,11 +112,11 @@ void MainWindow::newMessage(QString msg)
        QJsonObject json = doc.object();
        if (json["action"] == "new-participant") {
            setParticipants(json["participants"].toArray());
-           newParticipant(json["sender"].toString());
+           newParticipant(json["sender_pseudo"].toString());
        } else if (json["action"] == "participant-left") {
-           participantLeft(json["sender"].toString());
+           participantLeft(json["sender_pseudo"].toString());
        } else if (json["action"] == "new-message") {
-           appendMessage(json["sender"].toString(), json["message"].toString());
+           appendMessage(json["sender_pseudo"].toString(), json["message"].toString());
        }
 }
 

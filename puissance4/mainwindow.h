@@ -34,7 +34,7 @@ private slots:
 private:
     bool m_debug = true;
     QWebSocket *m_webSocket;
-    QUrl url = QUrl(QStringLiteral("ws://localhost:3000"));
+    QUrl url = QUrl(QStringLiteral("ws://90.89.173.98"));
     QTextTableFormat tableFormat;
     Ui::MainWindow *ui; 
 

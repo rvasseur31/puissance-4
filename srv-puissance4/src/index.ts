@@ -84,7 +84,7 @@ createConnection({
                 participants.push(json["sender_pseudo"]);
                 json["participants"] = participants;
                 broadcastSocket(JSON.stringify(json));
-                addUserToQueue(json["sender_id"]);
+                //addUserToQueue(json["sender_id"]);
             } else if (json.action == "participant-left") {
                 console.log(json);
                 participants = participants.filter(participant => participant !== json["sender_pseudo"]);
@@ -110,6 +110,8 @@ createConnection({
             }
         });
     }
+
+    
 
     const addUserToQueue = async (id: number) => {
         const repository = getManager();

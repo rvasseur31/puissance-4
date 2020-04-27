@@ -19,15 +19,9 @@ export class Room implements IRoom {
     users: User[];
 
     /**
-     * True if the game is finish.
-     */
-    @Column()
-    is_end: boolean;
-
-    /**
      * To know who win [1, 2, N, NULL]
      */
-    @Column()
+    @Column({ nullable: true})
     who_win: string;
 
     /**
@@ -41,4 +35,5 @@ export class Room implements IRoom {
      */
     @OneToMany(type => GameMove, gameMove => gameMove.room)
     gameMoves: GameMove[]
+
 }

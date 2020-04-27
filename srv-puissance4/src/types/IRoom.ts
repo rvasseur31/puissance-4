@@ -12,11 +12,6 @@ export interface IRoom {
      * Users id.
      */
     users: User[];
-
-    /**
-     * True if the game is finish
-     */
-    is_end: boolean;
     
     /**
      * Char [1, 2, N, NULL]

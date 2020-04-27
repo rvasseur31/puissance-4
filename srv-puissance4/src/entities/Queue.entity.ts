@@ -1,7 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, AfterInsert, getConnection } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, AfterInsert, getConnection, Any } from 'typeorm';
 import { IQueue } from "../types/IQueue";
 import { User } from './User.entity';
 import { isDate } from 'util';
+import { Room } from './Room.entity';
 
 @Entity()
 export class Queue implements IQueue {
@@ -33,7 +34,10 @@ export class Queue implements IQueue {
             .addSelect(['user.id', 'user.pseudo'])
             .innerJoin("queue.user", "user")
             .getMany();
+        
         if (usersInQueue.length) {
+            const ids: number[] = [this.user.id, usersInQueue[0].user.id];
+            this.addUsersIntoRoom(ids);
 
         }
     }
@@ -46,12 +50,31 @@ export class Queue implements IQueue {
 
     addUsersIntoRoom = async (ids: number[]) => {
         const repository = getConnection().manager;
-        let users: User[];
-        for (let index = 0; index < ids.length; index++) {
-            users.push(await repository.findOne(User, ids[index]));
-        } 
-        // const preUserToQueue: Queue = new Queue(currentUser, new Date());
-        // const newUserToQueue: Queue = await repository.save(preUserToQueue)
-        // return newUserToQueue;
+        let users: User[] = await getConnection()
+            .getRepository(User)
+            .createQueryBuilder("user")
+            .where("user.id IN (:ids)", { ids: ids })
+            .getMany();
+        const newRoom: Room = await repository.save(new Room())
+            await getConnection()
+                .createQueryBuilder()
+                .update(User)
+                .set({
+                    room: newRoom
+                })
+                .where("id IN (:ids)", { ids: ids })
+                .execute();
+
+        await this.deleteUsersFromQueue(ids);
+        return newRoom;
+    }
+
+    deleteUsersFromQueue = async (ids: number[]) => {
+        await getConnection()
+            .createQueryBuilder()
+            .delete()
+            .from(Queue)
+            .where("userId IN (:ids)", { ids: ids })
+            .execute();
     }
 }
