@@ -139,9 +139,14 @@ void MainWindow::on_lineEdit_message_to_send_returnPressed()
     ui->lineEdit_message_to_send->clear();
 }
 
-void MainWindow::on_btn_clicked()
+void MainWindow::changeColor()
 {
-     ui->pushButton_1->setStyleSheet("QPushButton{ background-color: yellow }");
+    ui->pushButton_1->setAutoFillBackground(true);
+    ui->pushButton_1->setStyleSheet("QPushButton::checked{background-color: rgb(255, 0, 0); color: rgb(255, 255, 255)}");
+    update();
+
+//    ui->pushButton_1->setStyleSheet("QPushButton#pushButton_1 { background-color: yellow }");
+
 
 }
 

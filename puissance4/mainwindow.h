@@ -24,6 +24,7 @@ public:
     ~MainWindow();
 public slots:
     void getUserData(QJsonObject userData);
+    void changeColor();
 
 private slots:
     void isConnected();
@@ -31,13 +32,10 @@ private slots:
     void sslError(QList<QSslError> errors);
     void newMessage(QString msg); void on_lineEdit_message_to_send_returnPressed();
 
-    //changement de couleur des boutons
-    void on_btn_clicked();
-
 private:
     bool m_debug = true;
     QWebSocket *m_webSocket;
-    QUrl url = QUrl(QStringLiteral("ws://90.89.173.98"));
+    QUrl url = QUrl(QStringLiteral("ws://projet-logiciel.herokuapp.com/"));
     QTextTableFormat tableFormat;
     Ui::MainWindow *ui; 
 
