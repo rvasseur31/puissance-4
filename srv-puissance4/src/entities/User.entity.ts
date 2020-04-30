@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn } from "typeorm";
 import { IUser } from '../types/IUser'
 import { Room } from './Room.entity';
 import { Message } from './Message.entity';
@@ -41,12 +41,17 @@ export class User implements IUser {
     })
     messages: Message[];
 
+
+    @Column({ nullable: true })
+    roomId: number;
+
     /**
      * Current user room.
      */
     @ManyToOne(type => Room, room => room.users, {
         nullable: true
     })
+    @JoinColumn()
     room: Room;
 
     /**

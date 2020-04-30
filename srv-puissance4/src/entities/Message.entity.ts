@@ -37,4 +37,10 @@ export class Message implements IMessage {
      */
     @Column({type: "datetime"})
     send_at: Date;
+
+    constructor(message: string, roomId:number, userId:number) {
+        this.message = message;
+        this.send_at = new Date();
+        //this.room = await repository.findOne(User, id);
+    }
 }

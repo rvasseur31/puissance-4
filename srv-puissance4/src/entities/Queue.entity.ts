@@ -3,6 +3,7 @@ import { IQueue } from "../types/IQueue";
 import { User } from './User.entity';
 import { isDate } from 'util';
 import { Room } from './Room.entity';
+import { SocketServer } from '../SocketServer';
 
 @Entity()
 export class Queue implements IQueue {
@@ -34,7 +35,7 @@ export class Queue implements IQueue {
             .addSelect(['user.id', 'user.pseudo'])
             .innerJoin("queue.user", "user")
             .getMany();
-        
+
         if (usersInQueue.length) {
             const ids: number[] = [this.user.id, usersInQueue[0].user.id];
             this.addUsersIntoRoom(ids);
@@ -55,17 +56,17 @@ export class Queue implements IQueue {
             .createQueryBuilder("user")
             .where("user.id IN (:ids)", { ids: ids })
             .getMany();
-        const newRoom: Room = await repository.save(new Room())
-            await getConnection()
-                .createQueryBuilder()
-                .update(User)
-                .set({
-                    room: newRoom
-                })
-                .where("id IN (:ids)", { ids: ids })
-                .execute();
-
+        const newRoom: Room = await repository.save(new Room());
+        await getConnection()
+            .createQueryBuilder()
+            .update(User)
+            .set({
+                room: newRoom
+            })
+            .where("id IN (:ids)", { ids: ids })
+            .execute();
         await this.deleteUsersFromQueue(ids);
+        SocketServer.getCurrentInstance().addUserToRoom(newRoom.id, ids);
         return newRoom;
     }
 

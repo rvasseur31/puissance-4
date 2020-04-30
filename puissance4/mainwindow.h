@@ -44,7 +44,7 @@ private:
     void newParticipant(const QString &nick);
     void participantLeft(const QString &nick);
     void showInformation();
-    QString sendSocketData(QString action, int id, QString pseudo, QString message);
     void setParticipants(QJsonArray participants);
+    QString sendSocketData(QString action, int id, QString pseudo, int roomId, QString message);
 };
 #endif // MAINWINDOW_H
