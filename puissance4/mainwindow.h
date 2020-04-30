@@ -31,6 +31,9 @@ private slots:
     void sslError(QList<QSslError> errors);
     void newMessage(QString msg); void on_lineEdit_message_to_send_returnPressed();
 
+    //changement de couleur des boutons
+    void on_btn_clicked();
+
 private:
     bool m_debug = true;
     QWebSocket *m_webSocket;

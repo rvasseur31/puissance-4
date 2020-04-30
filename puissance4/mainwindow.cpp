@@ -139,6 +139,12 @@ void MainWindow::on_lineEdit_message_to_send_returnPressed()
     ui->lineEdit_message_to_send->clear();
 }
 
+void MainWindow::on_btn_clicked()
+{
+     ui->pushButton_1->setStyleSheet("QPushButton{ background-color: yellow }");
+
+}
+
 QString MainWindow::sendSocketData(QString action, int id, QString pseudo, QString message) {
     QJsonObject jsonObject;
     jsonObject["action"] = action;
