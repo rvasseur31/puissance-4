@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow() {
     qDebug() << __FUNCTION__<< "Destructor";
-    m_webSocket->sendTextMessage(sendSocketData("participant-left",userData["id"].toInt(), userData["pseudo"].toString(), ""));
+    m_webSocket->sendTextMessage(sendSocketData("participant-left",userData["id"].toInt(), userData["pseudo"].toString(), userData["roomId"].toInt(), ""));
     m_webSocket->close();
     delete ui;
 }
@@ -28,6 +28,7 @@ MainWindow::~MainWindow() {
 void MainWindow::getUserData(QJsonObject userData)
 {
     this->userData = userData;
+    qDebug() << userData;
 }
 
 void MainWindow::appendMessage(const QString &from, const QString &message)
@@ -56,7 +57,7 @@ void MainWindow::newParticipant(const QString &nick)
 void MainWindow::setParticipants(QJsonArray participants) {
     ui->listWidget->clear();
     for (int index = 0; index < participants.size(); index++) {
-         ui->listWidget->addItem(participants.at(index).toString());
+         ui->listWidget->addItem(participants.at(index)["pseudo"].toString());
     }
 }
 
@@ -88,7 +89,7 @@ void MainWindow::showInformation()
 
 void MainWindow::isConnected()
 {
-    m_webSocket->sendTextMessage(sendSocketData("new-participant",userData["id"].toInt(), userData["pseudo"].toString(), ""));
+    m_webSocket->sendTextMessage(sendSocketData("new-participant",userData["id"].toInt(), userData["pseudo"].toString(), userData["roomId"].toInt(), ""));
 }
 
 void MainWindow::logError(QAbstractSocket::SocketError err)
@@ -117,6 +118,9 @@ void MainWindow::newMessage(QString msg)
            participantLeft(json["sender_pseudo"].toString());
        } else if (json["action"] == "new-message") {
            appendMessage(json["sender_pseudo"].toString(), json["message"].toString());
+       } else if (json["action"] == "new-room") {
+           userData["roomId"] = json["roomId"];
+           qDebug() << userData;
        }
 }
 
@@ -133,7 +137,7 @@ void MainWindow::on_lineEdit_message_to_send_returnPressed()
                          .arg(text.left(text.indexOf(' '))));
         ui->textEdit_users_messages->setTextColor(color);
     } else {
-        m_webSocket->sendTextMessage(sendSocketData("new-message", userData["id"].toInt(), userData["pseudo"].toString(), text));
+        m_webSocket->sendTextMessage(sendSocketData("new-message", userData["id"].toInt(), userData["pseudo"].toString(), userData["roomId"].toInt(), text));
     }
 
     ui->lineEdit_message_to_send->clear();
@@ -150,11 +154,12 @@ void MainWindow::changeColor()
 
 }
 
-QString MainWindow::sendSocketData(QString action, int id, QString pseudo, QString message) {
+QString MainWindow::sendSocketData(QString action, int id, QString pseudo, int roomId, QString message) {
     QJsonObject jsonObject;
     jsonObject["action"] = action;
     jsonObject["sender_id"] = id;
     jsonObject["sender_pseudo"] = pseudo;
+    jsonObject["roomId"] = roomId;
     jsonObject["message"] = message;
     QJsonDocument doc(jsonObject);
     return QLatin1String(doc.toJson(QJsonDocument::Compact));
