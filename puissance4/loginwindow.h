@@ -31,6 +31,12 @@ private slots:
     void onResult(QNetworkReply *reply);
     void on_lineEditPassword_returnPressed();
 
+
+
+    void on_pushButtonJer_clicked();
+
+    void on_pushButtonRaf_clicked();
+
 private:
     Ui::LoginWindow *ui;
     void setLoginMode(bool action);

@@ -228,6 +228,20 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_8">
            <item>
+            <widget class="QPushButton" name="pushButtonJer">
+             <property name="text">
+              <string>jer</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButtonRaf">
+             <property name="text">
+              <string>raph</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <spacer name="horizontalSpacer_5">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -328,7 +342,7 @@
      <x>0</x>
      <y>0</y>
      <width>1109</width>
-     <height>31</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

@@ -44,7 +44,20 @@ void LoginWindow::on_pushButtonSignIn_clicked()
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
-    networkManager->post(request, QJsonDocument(jsObj).toJson()); ui->statusbar->showMessage("Authenticating on " + serverUrl + route + " ..."); }  void LoginWindow::setLoginMode(bool action) { if (action) { ui->groupBoxSignIn->setTitle("Sign In"); ui->labelNoAccount->setText("You don't have an account ? "); ui->pushButtonSignUp->setText("Sign Up"); ui->pushButtonSignIn->setText("Sign In");  } else { ui->groupBoxSignIn->setTitle("Sign Up"); ui->labelNoAccount->setText("You have an account ? "); ui->pushButtonSignUp->setText("Sign in"); ui->pushButtonSignIn->setText("Sign up"); }
+    networkManager->post(request, QJsonDocument(jsObj).toJson());
+    ui->statusbar->showMessage("Authenticating on " + serverUrl + route + " ...");
+}
+void LoginWindow::setLoginMode(bool action) {
+    if (action) {
+        ui->groupBoxSignIn->setTitle("Sign In");
+        ui->labelNoAccount->setText("You don't have an account ? ");
+        ui->pushButtonSignUp->setText("Sign Up");
+        ui->pushButtonSignIn->setText("Sign In");
+    } else { ui->groupBoxSignIn->setTitle("Sign Up");
+        ui->labelNoAccount->setText("You have an account ? ");
+        ui->pushButtonSignUp->setText("Sign in");
+        ui->pushButtonSignIn->setText("Sign up");
+    }
     loginMode = !loginMode;
 }
 
@@ -77,4 +90,73 @@ void LoginWindow::onResult(QNetworkReply *reply) {
 void LoginWindow::on_lineEditPassword_returnPressed()
 {
     on_pushButtonSignIn_clicked();
+}
+
+
+
+
+
+
+
+
+
+void LoginWindow::on_pushButtonJer_clicked()
+{
+    QString email = "jer@gmail.com";
+    QString password = "jer";
+
+    qDebug() << __FUNCTION__ << "Username : " << email << ", Password : " << password;
+    if (email == "" || password == "") {
+        ui->statusbar->showMessage("You should provide a login and a password");
+        return;
+    }
+    QJsonObject jsObj;
+    jsObj["email"] = email;
+    if (!loginMode)
+        jsObj["pseudo"] = "pseudo";
+    jsObj["password"] = password;
+    QString route;
+    if (loginMode){
+        route = "auth/login";
+    }
+    else {
+        route = "auth/register";
+    }
+    QUrl url(serverUrl + route);
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    networkManager->post(request, QJsonDocument(jsObj).toJson());
+    ui->statusbar->showMessage("Authenticating on " + serverUrl + route + " ...");
+}
+
+
+void LoginWindow::on_pushButtonRaf_clicked()
+{
+    QString email = "raf@gmail.com";
+    QString password = "raf";
+
+    qDebug() << __FUNCTION__ << "Username : " << email << ", Password : " << password;
+    if (email == "" || password == "") {
+        ui->statusbar->showMessage("You should provide a login and a password");
+        return;
+    }
+    QJsonObject jsObj;
+    jsObj["email"] = email;
+    if (!loginMode)
+        jsObj["pseudo"] = "pseudo";
+    jsObj["password"] = password;
+    QString route;
+    if (loginMode){
+        route = "auth/login";
+    }
+    else {
+        route = "auth/register";
+    }
+    QUrl url(serverUrl + route);
+    QNetworkRequest request(url);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    networkManager->post(request, QJsonDocument(jsObj).toJson());
+    ui->statusbar->showMessage("Authenticating on " + serverUrl + route + " ...");
 }
