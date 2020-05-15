@@ -4,6 +4,7 @@ import { Queue } from './entities/Queue.entity';
 import { User } from './entities/User.entity';
 import * as http from "http";
 import { getManager, getConnection } from 'typeorm';
+import { Participant } from './entities/Participant';
 
 /**
  * Logger.
@@ -11,8 +12,7 @@ import { getManager, getConnection } from 'typeorm';
 const LOGGER = factory.getLogger("SocketServer");
 
 export class SocketServer {
-
-    private participants: any[] = [];
+    private participantsInQueue: Participant[] = [];
 
     private rooms: any = {};
 
@@ -56,21 +56,21 @@ export class SocketServer {
     private listen(): void {
         this.wss.on('connection', (ws: any) => {
             ws.on('message', (message: string) => {
-                let json = JSON.parse(message);     
+                let json = JSON.parse(message);
                 if (json.action == "new-participant") {
-                    this.participants.push({ pseudo: json["sender_pseudo"], id: json["sender_id"], ws: ws });
-                    json["participants"] = this.participants;
+                    this.participantsInQueue.push(new Participant(json["sender_pseudo"], json["sender_id"], ws));
+                    json["participants"] = this.participantsInQueue;
                     this.broadcastSocket(JSON.stringify(json));
                     this.addUserToQueue(json["sender_id"]);
-                } 
+                }
                 else if (json.action == "participant-left") {
                     console.log(json);
-                    this.participants = this.participants.filter(participant => participant !== json["sender_pseudo"]);
-                    json["participants"] = this.participants;
-                    this.broadcastSocket(JSON.stringify(json));
+                    this.participantsInQueue = this.participantsInQueue.filter(participant => participant.pseudo != json["sender_pseudo"]);
                     this.userLeave(json.sender_id, json.roomId);
+                    json["participants"] = this.participantsInQueue;
+                    this.broadcastSocket(JSON.stringify(json));
                     ws.close();
-                } 
+                }
                 else if (json.action == "new-message") {
                     if (json.roomId) {
                         for (let index = 0; index < this.rooms[json.roomId].length; index++) {
@@ -82,16 +82,12 @@ export class SocketServer {
                     }
                 }
             });
-
-            ws.on("close", () => {
-                console.log("closed");
-            })
         });
     }
 
     private broadcastSocket = (message: string) => {
-        LOGGER.debug("Broadcast on global participants");
-        this.participants.forEach((client) => {
+        LOGGER.debug("Broadcast on global participantsInQueue");
+        this.participantsInQueue.forEach((client) => {
             if (client.ws.readyState === WebSocket.OPEN) {
                 client.ws.send(message);
             }
@@ -107,38 +103,50 @@ export class SocketServer {
         return newUserToQueue;
     }
 
-    addUserToRoom = (roomId: number, ids: number[]) => {
+    addUserToRoom = (roomId: number, idsOfPlayers: number[]) => {
         LOGGER.debug("New room created, users are added !")
-        for (let index = 0; index < ids.length; index++) {
-            let user = this.participants.find(x => x.id === ids[index]);
+        for (let index = 0; index < idsOfPlayers.length; index++) {
+            let user = this.participantsInQueue.find((participant: Participant) => participant.id === idsOfPlayers[index]);
             user.ws.send(JSON.stringify({ "action": "new-room", "roomId": roomId }));
             // Add user in room
             this.rooms[roomId] ? this.rooms[roomId].push(user) : this.rooms[roomId] = [user];
             // Remove user of global participant
-            this.participants.splice(this.participants.findIndex(function(i){
-                return i.id === ids[index];
+            this.participantsInQueue.splice(this.participantsInQueue.findIndex(function (participant) {
+                return participant.id === idsOfPlayers[index];
             }), 1);
         }
+        console.log("Mes rooms :")
+        console.log(this.rooms);
     }
 
     private userLeave = async (userId: number, roomId: number) => {
+        // Put the other user into queue in ram
+        this.participantsInQueue.push(this.rooms[roomId].find((participant: Participant) => participant.id !== userId));
+        // Delete the room in ram
         delete this.rooms[roomId];
+        // Remove the user of the room in database (update roomId of User table)
         await getConnection()
             .createQueryBuilder()
             .update(User)
             .set({ roomId: null })
             .where("id = :id", { id: userId })
             .execute();
+        // Get the other participant of the room
+        let otherParticipant: User = await getConnection().getRepository(User).findOne({
+            roomId: roomId
+        });
+        // Set roomId as null
+        otherParticipant.roomId = null;
+        // Save
+        otherParticipant = await getConnection().getRepository(User).save(otherParticipant);
+        // Add him into queue
+        this.addUserToQueue(otherParticipant.id)
+        // Remove user from queue table
         await getConnection()
             .createQueryBuilder()
             .delete()
             .from(Queue)
             .where("userId = :userId", { userId: userId })
             .execute();
-
-    }
-
-    private newMessageInRoom = (roomId: number, message: String) => {
-        //const preNewMessage: Message = new Message()
     }
 }

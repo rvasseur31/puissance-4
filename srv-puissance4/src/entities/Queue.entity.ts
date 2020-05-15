@@ -35,11 +35,10 @@ export class Queue implements IQueue {
             .addSelect(['user.id', 'user.pseudo'])
             .innerJoin("queue.user", "user")
             .getMany();
-
+ 
         if (usersInQueue.length) {
             const ids: number[] = [this.user.id, usersInQueue[0].user.id];
             this.addUsersIntoRoom(ids);
-
         }
     }
 
