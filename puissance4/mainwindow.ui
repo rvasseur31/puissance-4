@@ -19,7 +19,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>901</width>
+      <width>1364</width>
       <height>471</height>
      </rect>
     </property>
@@ -40,119 +40,7 @@
         </widget>
        </item>
        <item>
-        <spacer name="verticalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Minimum</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>10</width>
-           <height>60</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
         <layout class="QGridLayout" name="gridLayout">
-         <item row="2" column="1">
-          <widget class="QPushButton" name="pushButton_10">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="3">
-          <widget class="QPushButton" name="pushButton_38">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="3">
-          <widget class="QPushButton" name="pushButton_12">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="5">
-          <widget class="QPushButton" name="pushButton_14">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="1">
-          <widget class="QPushButton" name="pushButton_18">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="0">
-          <widget class="QPushButton" name="pushButton_29">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0">
-          <widget class="QPushButton" name="pushButton_19">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="4">
-          <widget class="QPushButton" name="pushButton_13">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
          <item row="1" column="4">
           <widget class="QPushButton" name="pushButton_5">
            <property name="styleSheet">
@@ -165,125 +53,15 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="6">
-          <widget class="QPushButton" name="pushButton_6">
+         <item row="1" column="3">
+          <widget class="QPushButton" name="pushButton_4">
            <property name="styleSheet">
             <string notr="true">QPushButton {
      background-color: grey;
  }</string>
            </property>
            <property name="text">
-            <string>7</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="4">
-          <widget class="QPushButton" name="pushButton_26">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }v</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="4">
-          <widget class="QPushButton" name="pushButton_37">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="3">
-          <widget class="QPushButton" name="pushButton_27">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="0">
-          <widget class="QPushButton" name="pushButton_41">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="1">
-          <widget class="QPushButton" name="pushButton_40">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="5">
-          <widget class="QPushButton" name="pushButton_33">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="2">
-          <widget class="QPushButton" name="pushButton_39">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="2">
-          <widget class="QPushButton" name="pushButton_28">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="1">
-          <widget class="QPushButton" name="pushButton_25">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
+            <string>4</string>
            </property>
           </widget>
          </item>
@@ -302,90 +80,6 @@
            </property>
           </widget>
          </item>
-         <item row="4" column="6">
-          <widget class="QPushButton" name="pushButton_34">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="2">
-          <widget class="QPushButton" name="pushButton_30">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="5">
-          <widget class="QPushButton" name="pushButton_24">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="2">
-          <widget class="QPushButton" name="pushButton_21">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="2">
-          <widget class="QPushButton" name="pushButton_3">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>3</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QPushButton" name="pushButton_16">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="6">
-          <widget class="QPushButton" name="pushButton_42">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
          <item row="1" column="5">
           <widget class="QPushButton" name="pushButton_7">
            <property name="styleSheet">
@@ -398,123 +92,27 @@
            </property>
           </widget>
          </item>
-         <item row="4" column="3">
-          <widget class="QPushButton" name="pushButton_31">
+         <item row="1" column="6">
+          <widget class="QPushButton" name="pushButton_6">
            <property name="styleSheet">
             <string notr="true">QPushButton {
      background-color: grey;
  }</string>
            </property>
            <property name="text">
-            <string>1</string>
+            <string>7</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="3">
-          <widget class="QPushButton" name="pushButton_4">
+         <item row="1" column="2">
+          <widget class="QPushButton" name="pushButton_3">
            <property name="styleSheet">
             <string notr="true">QPushButton {
      background-color: grey;
  }</string>
            </property>
            <property name="text">
-            <string>4</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="3">
-          <widget class="QPushButton" name="pushButton_22">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="6">
-          <widget class="QPushButton" name="pushButton_17">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="6">
-          <widget class="QPushButton" name="pushButton_15">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="5">
-          <widget class="QPushButton" name="pushButton_36">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="5">
-          <widget class="QPushButton" name="pushButton_43">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QPushButton" name="pushButton_11">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="4">
-          <widget class="QPushButton" name="pushButton_32">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
-          <widget class="QPushButton" name="pushButton_9">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
+            <string>3</string>
            </property>
           </widget>
          </item>
@@ -533,41 +131,21 @@
            </property>
           </widget>
          </item>
-         <item row="3" column="1">
-          <widget class="QPushButton" name="pushButton_20">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
+         <item row="2" column="3">
+          <spacer name="verticalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
            </property>
-           <property name="text">
-            <string>1</string>
+           <property name="sizeType">
+            <enum>QSizePolicy::Minimum</enum>
            </property>
-          </widget>
-         </item>
-         <item row="3" column="4">
-          <widget class="QPushButton" name="pushButton_23">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>10</width>
+             <height>60</height>
+            </size>
            </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="6">
-          <widget class="QPushButton" name="pushButton_35">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>1</string>
-           </property>
-          </widget>
+          </spacer>
          </item>
         </layout>
        </item>

@@ -1,16 +1,20 @@
 #include "matrixgame.h"
 #include "iostream"
+#include <string>
+
+using namespace std;
 
 MatrixGame::MatrixGame()
 {
 
 
+
 }
 
-void gamePlateau(){
+void MatrixGame::matrixPosition()
+{
 
-
-    int gameBoard[6][7] = {
+    int matrixPosition[6][7] = {
         {0, 1, 2, 3, 4, 5, 6},          /*  initializers for row indexed by 0 */
         {7, 8, 9, 10, 11, 12, 13},      /*  initializers for row indexed by 1 */
         {14, 15, 16, 17, 18, 19, 20},   /*  initializers for row indexed by 2 */
@@ -19,5 +23,13 @@ void gamePlateau(){
         {35, 36, 37, 38, 39, 40, 41},
     };
 
+    for(int i=0; i<6; i++){
+        for(int j=0; j<7; j++){
+            cout << "element at x[" << i
+                  <<"] [" << j << "] : ";
+            cout << matrixPosition[i] [j]<<endl;
+        }
+    }
 
 }
+

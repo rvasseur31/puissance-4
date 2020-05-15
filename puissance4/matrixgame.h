@@ -13,7 +13,7 @@ class MatrixGame
 
 public:
     MatrixGame();
-    gamePlateau();
+    void matrixPosition();
 };
 
 #endif // MATRIXGAME_H
