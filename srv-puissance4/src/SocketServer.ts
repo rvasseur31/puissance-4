@@ -5,6 +5,8 @@ import { User } from './entities/User.entity';
 import * as http from "http";
 import { getManager, getConnection } from 'typeorm';
 import { Participant } from './entities/Participant';
+import { Room } from './entities/Room.entity';
+import { GameLogic } from './services/GameLogic';
 
 /**
  * Logger.
@@ -64,7 +66,6 @@ export class SocketServer {
                     this.addUserToQueue(json["sender_id"]);
                 }
                 else if (json.action == "participant-left") {
-                    console.log(json);
                     this.participantsInQueue = this.participantsInQueue.filter(participant => participant.pseudo != json["sender_pseudo"]);
                     this.userLeave(json.sender_id, json.roomId);
                     json["participants"] = this.participantsInQueue;
@@ -73,12 +74,23 @@ export class SocketServer {
                 }
                 else if (json.action == "new-message") {
                     if (json.roomId) {
-                        for (let index = 0; index < this.rooms[json.roomId].length; index++) {
-                            this.rooms[json.roomId][index].ws.send(JSON.stringify(json))
-                        }
+                        this.rooms[json.roomId].sendSocketToParticipants(JSON.stringify(json));
                     }
                     else {
                         this.broadcastSocket(message);
+                    }
+                } else if (json.action == "new-move") {
+                    if (json.roomId) {
+                        let gameLogic = GameLogic.getInstance(this.rooms);
+                        if (gameLogic.makeMove(json.roomId, json.column, json.sender_id)) {
+                            this.rooms[json.roomId].sendSocketToParticipants(JSON.stringify(json));
+                        } else {
+                            this.rooms[json.roomId].sendSocketToParticipants(JSON.stringify({action: "new-move"}));
+                        }
+                    }
+                } else if (json.action == "end-game") {
+                    if (json.roomId) {
+                        this.rooms[json.roomId].sendSocketToParticipants(JSON.stringify({ action: "end-game", status: "Victoire du joueur 1" }));
                     }
                 }
             });
@@ -103,44 +115,34 @@ export class SocketServer {
         return newUserToQueue;
     }
 
-    addUserToRoom = (roomId: number, idsOfPlayers: number[]) => {
-        LOGGER.debug("New room created, users are added !")
-        for (let index = 0; index < idsOfPlayers.length; index++) {
-            let user = this.participantsInQueue.find((participant: Participant) => participant.id === idsOfPlayers[index]);
-            user.ws.send(JSON.stringify({ "action": "new-room", "roomId": roomId }));
-            // Add user in room
-            this.rooms[roomId] ? this.rooms[roomId].push(user) : this.rooms[roomId] = [user];
-            // Remove user of global participant
-            this.participantsInQueue.splice(this.participantsInQueue.findIndex(function (participant) {
-                return participant.id === idsOfPlayers[index];
-            }), 1);
-        }
-        console.log("Mes rooms :")
-        console.log(this.rooms);
-    }
-
     private userLeave = async (userId: number, roomId: number) => {
-        // Put the other user into queue in ram
-        this.participantsInQueue.push(this.rooms[roomId].find((participant: Participant) => participant.id !== userId));
-        // Delete the room in ram
-        delete this.rooms[roomId];
-        // Remove the user of the room in database (update roomId of User table)
-        await getConnection()
-            .createQueryBuilder()
-            .update(User)
-            .set({ roomId: null })
-            .where("id = :id", { id: userId })
-            .execute();
-        // Get the other participant of the room
-        let otherParticipant: User = await getConnection().getRepository(User).findOne({
-            roomId: roomId
-        });
-        // Set roomId as null
-        otherParticipant.roomId = null;
-        // Save
-        otherParticipant = await getConnection().getRepository(User).save(otherParticipant);
-        // Add him into queue
-        this.addUserToQueue(otherParticipant.id)
+        console.log("My roomId : " + roomId);
+        if (roomId) {
+            let otherParticipantInRam: Participant = this.rooms[roomId].getParticipants.find((participant: Participant) => participant.id !== userId);
+            // Put the other user into queue in ram
+            this.participantsInQueue.push(otherParticipantInRam);
+            // Send socket to put roomId to NULL
+            otherParticipantInRam.ws.send(JSON.stringify({ action: "leave-room" }))
+            // Delete the room in ram
+            delete this.rooms[roomId];
+            // Remove the user of the room in database (update roomId of User table)
+            await getConnection()
+                .createQueryBuilder()
+                .update(User)
+                .set({ roomId: null })
+                .where("id = :id", { id: userId })
+                .execute();
+            // Get the other participant of the room
+            let otherParticipant: User = await getConnection().getRepository(User).findOne({
+                roomId: roomId
+            });
+            // Set roomId as null
+            otherParticipant.roomId = null;
+            // Save
+            otherParticipant = await getConnection().getRepository(User).save(otherParticipant);
+            // Add him into queue
+            this.addUserToQueue(otherParticipant.id)
+        }
         // Remove user from queue table
         await getConnection()
             .createQueryBuilder()
@@ -149,4 +151,41 @@ export class SocketServer {
             .where("userId = :userId", { userId: userId })
             .execute();
     }
+
+    addUserToRoom = (roomId: number, idsOfPlayers: number[]) => {
+        LOGGER.debug("New room created, users are added !");
+        let room: Room = new Room();
+        for (let index = 0; index < idsOfPlayers.length; index++) {
+            let participant = this.participantsInQueue.find((participant: Participant) => participant.id === idsOfPlayers[index]);
+            participant.ws.send(JSON.stringify({ "action": "new-room", "roomId": roomId }));
+            room.addNewParticipantIntoTheRoom(roomId, participant);
+            // Remove participant of global participant
+            this.participantsInQueue.splice(this.participantsInQueue.findIndex(function (participant) {
+                return participant.id === idsOfPlayers[index];
+            }), 1);
+        }
+        this.rooms[roomId] = room;
+        console.log(this.rooms);
+
+    }
 }
+
+
+
+/// Test Game Logic
+// this.rooms = {
+//     "1": new Room()
+// }
+// console.log("Room created")
+// console.log(this.rooms[1].getBoard)
+// let gameLogic = GameLogic.getInstance(this.rooms);
+// gameLogic.makeMove(1, 0, 1)
+// console.log(gameLogic.checkForWin(1));
+// gameLogic.makeMove(1, 0, 1)
+// console.log(gameLogic.checkForWin(1));
+// gameLogic.makeMove(1, 0, 1)
+// console.log(gameLogic.checkForWin(1));
+// gameLogic.makeMove(1, 0, 1)
+// console.log(gameLogic.checkForWin(1));
+// console.log("Move :")
+// console.log(this.rooms[1].getBoard);

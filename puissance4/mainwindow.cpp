@@ -121,6 +121,9 @@ void MainWindow::newMessage(QString msg)
        } else if (json["action"] == "new-room") {
            userData["roomId"] = json["roomId"];
            qDebug() << userData;
+       } else if (json["action"] == "leave-room") {
+           userData["roomId"] = NULL;
+           qDebug() << userData;
        }
 }
 
