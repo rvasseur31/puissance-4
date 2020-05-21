@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1230</width>
-    <height>543</height>
+    <width>1265</width>
+    <height>546</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>1364</width>
+      <width>1251</width>
       <height>471</height>
      </rect>
     </property>
@@ -27,17 +27,46 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QLabel" name="label">
-         <property name="minimumSize">
-          <size>
-           <width>598</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>PUISSANCE 4</string>
-         </property>
-        </widget>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_status">
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>En attente d'un adversaire</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
        </item>
        <item>
         <layout class="QGridLayout" name="gridLayout_button">
@@ -53,6 +82,21 @@
            </property>
           </widget>
          </item>
+         <item row="1" column="1">
+          <widget class="QPushButton" name="pushButton_2">
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+     background-color: grey;
+ }
+ QPushButton:pressed {
+     background-color: blue;    
+ }</string>
+           </property>
+           <property name="text">
+            <string>2</string>
+           </property>
+          </widget>
+         </item>
          <item row="1" column="5">
           <widget class="QPushButton" name="pushButton_6">
            <property name="styleSheet">
@@ -62,6 +106,18 @@
            </property>
            <property name="text">
             <string>6</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="6">
+          <widget class="QPushButton" name="pushButton_7">
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+     background-color: grey;
+ }</string>
+           </property>
+           <property name="text">
+            <string>7</string>
            </property>
           </widget>
          </item>
@@ -89,18 +145,6 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="6">
-          <widget class="QPushButton" name="pushButton_7">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }</string>
-           </property>
-           <property name="text">
-            <string>7</string>
-           </property>
-          </widget>
-         </item>
          <item row="1" column="0">
           <widget class="QPushButton" name="pushButton_1">
            <property name="styleSheet">
@@ -113,21 +157,6 @@
            </property>
            <property name="text">
             <string>1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QPushButton" name="pushButton_2">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-     background-color: grey;
- }
- QPushButton:pressed {
-     background-color: blue;    
- }</string>
-           </property>
-           <property name="text">
-            <string>2</string>
            </property>
           </widget>
          </item>
@@ -237,7 +266,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1230</width>
+     <width>1265</width>
      <height>31</height>
     </rect>
    </property>

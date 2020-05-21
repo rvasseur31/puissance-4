@@ -20,10 +20,13 @@ class MainWindow : public QMainWindow
     QJsonObject userData;
     QJsonDocument board;
     QJsonArray matrixArray;
+    bool isMyTurnToPlay = false;
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void setIsMyTurnToPlay();
+
 public slots:
     void getUserData(QJsonObject userData);
     void changeColor();
@@ -62,5 +65,6 @@ private:
     void setParticipants(QJsonArray participants);
     QString sendSocketData(QString action, int id, QString pseudo, int roomId, QString message);
     void generateBoard(QJsonArray matrix);
+    void makeMove(QString col);
 };
 #endif // MAINWINDOW_H

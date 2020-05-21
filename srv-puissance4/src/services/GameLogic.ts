@@ -63,7 +63,6 @@ export class GameLogic {
         let found = 0;
         let winner_coins = [];
         let winner = 0;
-        let dataToReturn = {};
         let person = 0;
         /*horizontal*/
         for (let row = 0; row < board.length; row++) {
@@ -138,13 +137,8 @@ export class GameLogic {
             }
         }
 
-        if (winner) {
-            // dataToReturn.winner = winner;
-            // dataToReturn.winner_coins = winner_coins;
-            // return dataToReturn;
-            return true;
-        }
-        return false;
+        if (winner) return winner;
+        return 0;
     }
 
 }

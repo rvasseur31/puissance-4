@@ -4,6 +4,12 @@
 #include <QDebug>
 #include <QMessageBox>
 
+void MainWindow::setIsMyTurnToPlay()
+{
+    isMyTurnToPlay = !isMyTurnToPlay;
+    isMyTurnToPlay ? ui->label_status->setText("A vous de jouer") : ui->label_status->setText("En attente du coup adverse");
+}
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -125,17 +131,31 @@ void MainWindow::newMessage(QString msg)
            newParticipant(json["sender_pseudo"].toString());
        } else if (json["action"] == "participant-left") {
            participantLeft(json["sender_pseudo"].toString());
+           matrixArray = QJsonArray();
+           for(int i = 0; i < 6; i++){
+               QJsonArray row;
+               for(int j = 0; j < 7; j++){
+                   row.push_back(0);
+               }
+               matrixArray.push_back(row);
+           }
+           generateBoard(matrixArray);
        } else if (json["action"] == "new-message") {
            appendMessage(json["sender_pseudo"].toString(), json["message"].toString());
        } else if (json["action"] == "new-room") {
            userData["roomId"] = json["roomId"];
-           qDebug() << userData;
+           ui->label_status->setText("En attente du coup adverse");
+           if (json["isTurnOf"].toInt() == userData["id"].toInt()) setIsMyTurnToPlay();
        } else if (json["action"] == "leave-room") {
            userData["roomId"] = 0;
-           qDebug() << userData;
+           ui->label_status->setText("En attente d'un adversaire");
        } else if (json["action"] == "new-move") {
            matrixArray = json["board"].toArray();
            generateBoard(matrixArray);
+           setIsMyTurnToPlay();
+       } else if (json["action"] == "end-game") {
+           if (json["winner"].toInt() == userData["id"].toInt()) ui->label_status->setText("Vous avez gagné");
+           else ui->label_status->setText("Vous avez perdu");
        }
 }
 
@@ -181,37 +201,46 @@ QString MainWindow::sendSocketData(QString action, int id, QString pseudo, int r
 
 void MainWindow::on_pushButton_1_clicked()
 {
-    m_webSocket->sendTextMessage(sendSocketData("new-move", userData["id"].toInt(), userData["pseudo"].toString(), userData["roomId"].toInt(), "0"));
+    makeMove("0");
 }
 
 void MainWindow::on_pushButton_2_clicked()
 {
-     m_webSocket->sendTextMessage(sendSocketData("new-move", userData["id"].toInt(), userData["pseudo"].toString(), userData["roomId"].toInt(), "1"));
+     makeMove("1");
 }
 
 void MainWindow::on_pushButton_3_clicked()
 {
-     m_webSocket->sendTextMessage(sendSocketData("new-move", userData["id"].toInt(), userData["pseudo"].toString(), userData["roomId"].toInt(), "2"));
+     makeMove("2");
 }
 
 void MainWindow::on_pushButton_4_clicked()
 {
-     m_webSocket->sendTextMessage(sendSocketData("new-move", userData["id"].toInt(), userData["pseudo"].toString(), userData["roomId"].toInt(), "3"));
+     makeMove("3");
 }
 
 void MainWindow::on_pushButton_5_clicked()
 {
-     m_webSocket->sendTextMessage(sendSocketData("new-move", userData["id"].toInt(), userData["pseudo"].toString(), userData["roomId"].toInt(), "4"));
+     makeMove("4");
 }
 
 void MainWindow::on_pushButton_6_clicked()
 {
-    m_webSocket->sendTextMessage(sendSocketData("new-move", userData["id"].toInt(), userData["pseudo"].toString(), userData["roomId"].toInt(), "5"));
+    makeMove("5");
 }
 
 void MainWindow::on_pushButton_7_clicked()
 {
-     m_webSocket->sendTextMessage(sendSocketData("new-move", userData["id"].toInt(), userData["pseudo"].toString(), userData["roomId"].toInt(), "6"));
+      makeMove("6");
+}
+
+void MainWindow::makeMove(QString col) {
+   if (isMyTurnToPlay) {
+       m_webSocket->sendTextMessage(sendSocketData("new-move", userData["id"].toInt(), userData["pseudo"].toString(), userData["roomId"].toInt(), col));
+   } else {
+       QMessageBox::information(this, tr("Attention"),
+                                tr("Ce n'est pas à vous de jouer, n'essayer pas de tricher"));
+   }
 }
 
 void MainWindow::generateBoard(QJsonArray matrix){
