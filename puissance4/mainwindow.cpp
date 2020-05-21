@@ -8,6 +8,14 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    for(int i = 0; i < 6; i++){
+        QJsonArray row;
+        for(int j = 0; j < 7; j++){
+            row.push_back(0);
+        }
+        matrixArray.push_back(row);
+    }
+    generateBoard(matrixArray);
     m_webSocket = new QWebSocket();
     if (m_debug)
         qDebug() << "WebSocket server:" << url;
@@ -29,6 +37,7 @@ void MainWindow::getUserData(QJsonObject userData)
 {
     this->userData = userData;
     qDebug() << userData;
+    generateBoard(matrixArray);
 }
 
 void MainWindow::appendMessage(const QString &from, const QString &message)
@@ -122,8 +131,11 @@ void MainWindow::newMessage(QString msg)
            userData["roomId"] = json["roomId"];
            qDebug() << userData;
        } else if (json["action"] == "leave-room") {
-           userData["roomId"] = NULL;
+           userData["roomId"] = 0;
            qDebug() << userData;
+       } else if (json["action"] == "new-move") {
+           matrixArray = json["board"].toArray();
+           generateBoard(matrixArray);
        }
 }
 
@@ -154,7 +166,6 @@ void MainWindow::changeColor()
 
 //    ui->pushButton_1->setStyleSheet("QPushButton#pushButton_1 { background-color: yellow }");
 
-
 }
 
 QString MainWindow::sendSocketData(QString action, int id, QString pseudo, int roomId, QString message) {
@@ -166,4 +177,51 @@ QString MainWindow::sendSocketData(QString action, int id, QString pseudo, int r
     jsonObject["message"] = message;
     QJsonDocument doc(jsonObject);
     return QLatin1String(doc.toJson(QJsonDocument::Compact));
+}
+
+void MainWindow::on_pushButton_1_clicked()
+{
+    m_webSocket->sendTextMessage(sendSocketData("new-move", userData["id"].toInt(), userData["pseudo"].toString(), userData["roomId"].toInt(), "0"));
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+     m_webSocket->sendTextMessage(sendSocketData("new-move", userData["id"].toInt(), userData["pseudo"].toString(), userData["roomId"].toInt(), "1"));
+}
+
+void MainWindow::on_pushButton_3_clicked()
+{
+     m_webSocket->sendTextMessage(sendSocketData("new-move", userData["id"].toInt(), userData["pseudo"].toString(), userData["roomId"].toInt(), "2"));
+}
+
+void MainWindow::on_pushButton_4_clicked()
+{
+     m_webSocket->sendTextMessage(sendSocketData("new-move", userData["id"].toInt(), userData["pseudo"].toString(), userData["roomId"].toInt(), "3"));
+}
+
+void MainWindow::on_pushButton_5_clicked()
+{
+     m_webSocket->sendTextMessage(sendSocketData("new-move", userData["id"].toInt(), userData["pseudo"].toString(), userData["roomId"].toInt(), "4"));
+}
+
+void MainWindow::on_pushButton_6_clicked()
+{
+    m_webSocket->sendTextMessage(sendSocketData("new-move", userData["id"].toInt(), userData["pseudo"].toString(), userData["roomId"].toInt(), "5"));
+}
+
+void MainWindow::on_pushButton_7_clicked()
+{
+     m_webSocket->sendTextMessage(sendSocketData("new-move", userData["id"].toInt(), userData["pseudo"].toString(), userData["roomId"].toInt(), "6"));
+}
+
+void MainWindow::generateBoard(QJsonArray matrix){
+    qDebug() << "Generate Board";
+    qDebug() << matrix;
+    for(int i = 0; i < matrix.size(); i++){
+        for(int j = 0; j < matrix[i].toArray().size(); j++){
+            if (matrix[i].toArray()[j].toInt() == 0) ui->gridLayout_board->addWidget(new QPushButton(""), i, j);
+            else if (matrix[i].toArray()[j].toInt() == userData["id"].toInt()) ui->gridLayout_board->addWidget(new QPushButton("x"), i, j);
+            else ui->gridLayout_board->addWidget(new QPushButton("o"), i, j);
+        }
+    }
 }

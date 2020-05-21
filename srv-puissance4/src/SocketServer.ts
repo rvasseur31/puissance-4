@@ -82,8 +82,8 @@ export class SocketServer {
                 } else if (json.action == "new-move") {
                     if (json.roomId) {
                         let gameLogic = GameLogic.getInstance(this.rooms);
-                        if (gameLogic.makeMove(json.roomId, json.column, json.sender_id)) {
-                            this.rooms[json.roomId].sendSocketToParticipants(JSON.stringify(json));
+                        if (gameLogic.makeMove(json.roomId, parseInt(json.message), json.sender_id)) {
+                            this.rooms[json.roomId].sendSocketToParticipants(JSON.stringify({action: "new-move", "board": this.rooms[json.roomId].getBoard}));
                         } else {
                             this.rooms[json.roomId].sendSocketToParticipants(JSON.stringify({action: "new-move"}));
                         }
