@@ -8,6 +8,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QPushButton>
 #include <QtWebSockets/QWebSocket>
 
 namespace Ui {
@@ -21,6 +22,7 @@ class MainWindow : public QMainWindow
     QJsonDocument board;
     QJsonArray matrixArray;
     bool isMyTurnToPlay = false;
+    QList<QPushButton *> boardElements;
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
@@ -29,7 +31,6 @@ public:
 
 public slots:
     void getUserData(QJsonObject userData);
-    void changeColor();
 private slots:
     void isConnected();
     void logError(QAbstractSocket::SocketError err);

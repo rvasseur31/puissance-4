@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(m_webSocket, SIGNAL(sslErrors(QList<QSslError>)), this, SLOT(sslError(QList<QSslError>)));
     connect(m_webSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(logError(QAbstractSocket::SocketError)));
     connect(m_webSocket, SIGNAL(textMessageReceived(QString)), this, SLOT(newMessage(QString)));
+    appendMessage("Puissance 4", "Vous êtes les bleus");
 }
 
 MainWindow::~MainWindow() {
@@ -37,6 +38,7 @@ MainWindow::~MainWindow() {
     m_webSocket->sendTextMessage(sendSocketData("participant-left",userData["id"].toInt(), userData["pseudo"].toString(), userData["roomId"].toInt(), ""));
     m_webSocket->close();
     delete ui;
+    foreach (auto boardElement, boardElements) { delete boardElement; }
 }
 
 void MainWindow::getUserData(QJsonObject userData)
@@ -178,16 +180,6 @@ void MainWindow::on_lineEdit_message_to_send_returnPressed()
     ui->lineEdit_message_to_send->clear();
 }
 
-void MainWindow::changeColor()
-{
-    ui->pushButton_1->setAutoFillBackground(true);
-    ui->pushButton_1->setStyleSheet("QPushButton::checked{background-color: rgb(255, 0, 0); color: rgb(255, 255, 255)}");
-    update();
-
-//    ui->pushButton_1->setStyleSheet("QPushButton#pushButton_1 { background-color: yellow }");
-
-}
-
 QString MainWindow::sendSocketData(QString action, int id, QString pseudo, int roomId, QString message) {
     QJsonObject jsonObject;
     jsonObject["action"] = action;
@@ -244,13 +236,14 @@ void MainWindow::makeMove(QString col) {
 }
 
 void MainWindow::generateBoard(QJsonArray matrix){
-    qDebug() << "Generate Board";
-    qDebug() << matrix;
     for(int i = 0; i < matrix.size(); i++){
         for(int j = 0; j < matrix[i].toArray().size(); j++){
-            if (matrix[i].toArray()[j].toInt() == 0) ui->gridLayout_board->addWidget(new QPushButton(""), i, j);
-            else if (matrix[i].toArray()[j].toInt() == userData["id"].toInt()) ui->gridLayout_board->addWidget(new QPushButton("x"), i, j);
-            else ui->gridLayout_board->addWidget(new QPushButton("o"), i, j);
+            QPushButton* boardElement = new QPushButton("");
+            if (matrix[i].toArray()[j].toInt() == 0) boardElement->setStyleSheet("QPushButton {background-color: #FFFFFF}");
+            else if (matrix[i].toArray()[j].toInt() == userData["id"].toInt()) boardElement->setStyleSheet("QPushButton {background-color: #3333FF}");
+            else boardElement->setStyleSheet("QPushButton {background-color: #FF3333}");
+            ui->gridLayout_board->addWidget(boardElement, i, j);
+            boardElements.push_back(boardElement);
         }
     }
 }
