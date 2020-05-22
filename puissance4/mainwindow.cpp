@@ -12,8 +12,9 @@ void MainWindow::setIsMyTurnToPlay()
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::MainWindow)
-{
+{   
     ui->setupUi(this);
+    ui->pushButton_restart->setHidden(true);
     for(int i = 0; i < 6; i++){
         QJsonArray row;
         for(int j = 0; j < 7; j++){
@@ -146,6 +147,7 @@ void MainWindow::newMessage(QString msg)
            appendMessage(json["sender_pseudo"].toString(), json["message"].toString());
        } else if (json["action"] == "new-room") {
            userData["roomId"] = json["roomId"];
+           ui->pushButton_restart->setHidden(true);
            ui->label_status->setText("En attente du coup adverse");
            if (json["isTurnOf"].toInt() == userData["id"].toInt()) setIsMyTurnToPlay();
        } else if (json["action"] == "leave-room") {
@@ -158,6 +160,11 @@ void MainWindow::newMessage(QString msg)
        } else if (json["action"] == "end-game") {
            if (json["winner"].toInt() == userData["id"].toInt()) ui->label_status->setText("Vous avez gagné");
            else ui->label_status->setText("Vous avez perdu");
+           ui->pushButton_restart->setHidden(false);
+       } else if (json["action"] == "restart") {
+           ui->pushButton_restart->setHidden(true);
+           matrixArray = json["board"].toArray();
+           generateBoard(matrixArray);
        }
 }
 
@@ -246,4 +253,9 @@ void MainWindow::generateBoard(QJsonArray matrix){
             boardElements.push_back(boardElement);
         }
     }
+}  
+
+void MainWindow::on_pushButton_restart_clicked()
+{
+    m_webSocket->sendTextMessage(sendSocketData("restart", userData["id"].toInt(), userData["pseudo"].toString(), userData["roomId"].toInt(), ""));
 }

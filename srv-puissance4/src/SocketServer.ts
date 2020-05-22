@@ -58,17 +58,17 @@ export class SocketServer {
 
     private listen(): void {
         this.wss.on('connection', (ws: any) => {
-            ws.on('message', (message: string) => {
+            ws.on('message', async (message: string) => {
                 let json = JSON.parse(message);
                 if (json.action == "new-participant") {
                     this.participantsInQueue.push(new Participant(json["sender_pseudo"], json["sender_id"], ws));
                     json["participants"] = this.participantsInQueue;
                     this.broadcastSocket(JSON.stringify(json));
-                    this.addUserToQueue(json["sender_id"]);
+                    await this.addUserToQueue(json["sender_id"]);
                 }
                 else if (json.action == "participant-left") {
                     this.participantsInQueue = this.participantsInQueue.filter(participant => participant.pseudo != json["sender_pseudo"]);
-                    this.userLeave(json.sender_id, json.roomId);
+                    await this.userLeave(json.sender_id, json.roomId);
                     json["participants"] = this.participantsInQueue;
                     this.broadcastSocket(JSON.stringify(json));
                     ws.close();
@@ -86,6 +86,9 @@ export class SocketServer {
                         let checkForWin = gameLogic.checkForWin(json.roomId);
                         if (checkForWin) this.rooms[json.roomId].sendSocketToParticipants(JSON.stringify({action: "end-game", winner: checkForWin}));
                     }
+                } else if (json.action == "restart") {
+                    this.rooms[json.roomId].restartGame();
+                    this.rooms[json.roomId].sendSocketToParticipants(JSON.stringify({action: "restart", "board": this.rooms[json.roomId].getBoard}));
                 }
             });
         });
@@ -163,7 +166,6 @@ export class SocketServer {
 
     }
 }
-
 
 
 /// Test Game Logic

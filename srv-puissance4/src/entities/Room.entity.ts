@@ -68,6 +68,17 @@ export class Room implements IRoom {
         return this.board;
     }
 
+    public restartGame = () => {
+        this.board = [];
+        for (let i = 0; i < 6; i++) {
+            let row: number[] = [];
+            for (let j = 0; j < 7; j++) {
+                row.push(0)
+            }
+            this.board.push(row);
+        }
+    }
+
     public addNewParticipantIntoTheRoom = (roomId: number, participant: Participant): void => {
         // Add participant in room
         this.participants.push(participant);
