@@ -107,12 +107,12 @@ export class GameLogic {
             for (let col = 0; col < board[0].length - 3; col++) {
                 if (winner) break;
                 for (let row = 0; row < board.length - 3; row++) {
-                    let first_val = board[row][col];
-                    if (first_val == 0) continue;
-                    if (first_val === board[row + 1][col + 1] &&
-                        first_val === board[row + 2][col + 2] &&
-                        first_val === board[row + 3][col + 3]) {
-                        winner = first_val;
+                    let firstValue = board[row][col];
+                    if (firstValue == 0) continue;
+                    if (firstValue === board[row + 1][col + 1] &&
+                        firstValue === board[row + 2][col + 2] &&
+                        firstValue === board[row + 3][col + 3]) {
+                        winner = firstValue;
                         winner_coins = [row + '' + col, (row + 1) + '' + (col + 1), (row + 2) + '' + (col + 2), (row + 3) + '' + (col + 3)];
                         break;
                     }
@@ -124,12 +124,12 @@ export class GameLogic {
             for (let col = board[0].length - 1; col > 2; col--) {
                 if (winner) break;
                 for (let row = 0; row < board.length - 3; row++) {
-                    let first_val = board[row][col];
-                    if (first_val == 0) continue;
-                    if (first_val === board[row + 1][col - 1] &&
-                        first_val === board[row + 2][col - 2] &&
-                        first_val === board[row + 3][col - 3]) {
-                        winner = first_val;
+                    let firstValue = board[row][col];
+                    if (firstValue == 0) continue;
+                    if (firstValue === board[row + 1][col - 1] &&
+                        firstValue === board[row + 2][col - 2] &&
+                        firstValue === board[row + 3][col - 3]) {
+                        winner = firstValue;
                         winner_coins = [row + '' + col, (row + 1) + '' + (col - 1), (row + 2) + '' + (col - 2), (row + 3) + '' + (col - 3)];
                         break;
                     }

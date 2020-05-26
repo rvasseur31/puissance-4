@@ -18,7 +18,7 @@ class LoginWindow : public QMainWindow
     QNetworkAccessManager *networkManager;
     bool loginMode = true;
     QString serverUrl = "https://projet-logiciel.herokuapp.com/api/";
-    MainWindow *game;
+    MainWindow *game = nullptr;
 public:
     explicit LoginWindow(QWidget *parent = nullptr);
     ~LoginWindow();

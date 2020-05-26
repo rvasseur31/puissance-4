@@ -51,6 +51,8 @@ private slots:
 
     void on_pushButton_6_clicked();
 
+    void on_pushButton_restart_clicked();
+
 private:
     bool m_debug = true;
     QWebSocket *m_webSocket;
