@@ -20,5 +20,5 @@ export interface IGameMove {
     /**
      * Move.
      */
-    move: string;
+    move: number;
 }

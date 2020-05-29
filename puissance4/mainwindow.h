@@ -22,6 +22,7 @@ class MainWindow : public QMainWindow
     QJsonDocument board;
     QJsonArray matrixArray;
     bool isMyTurnToPlay = false;
+    bool isGameFinished = false;
     QList<QPushButton *> boardElements;
 
 public:
@@ -56,7 +57,7 @@ private slots:
 private:
     bool m_debug = true;
     QWebSocket *m_webSocket;
-    QUrl url = QUrl(QStringLiteral("ws://projet-logiciel.herokuapp.com/"));
+    QUrl url = QUrl(QStringLiteral("ws://192.168.1.33:3000/"));
     QTextTableFormat tableFormat;
     Ui::MainWindow *ui; 
 

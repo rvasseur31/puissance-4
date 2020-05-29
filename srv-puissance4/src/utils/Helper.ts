@@ -1,8 +1,3 @@
-import { ITokenData } from '../types/ITokenData';
-import { IDataStoredInToken } from '../types/IDataStoredInToken';
-import * as jwt from 'jsonwebtoken';
-import { User } from '../entities/User.entity';
-
 export class Helper {
     /**
      * Helper instance.

@@ -6,8 +6,8 @@ import * as http from "http";
 import { getManager, getConnection } from 'typeorm';
 import { Participant } from './entities/Participant';
 import { Room } from './entities/Room.entity';
-import { GameLogic } from './services/GameLogic';
-import { Message } from './entities/Message.entity';
+import { GameLogic } from './services/GameLogic'
+import { GameMove } from './entities/GameMove.entity';
 
 /**
  * Logger.
@@ -74,21 +74,30 @@ export class SocketServer {
                     ws.close();
                 }
                 else if (json.action == "new-message") {
-                    json.roomId ? this.rooms[json.roomId].sendSocketToParticipants(JSON.stringify(json)) : this.broadcastSocket(message);  
+                    json.roomId ? this.rooms[json.roomId].sendSocketToParticipants(JSON.stringify(json)) : this.broadcastSocket(message);
                 } else if (json.action == "new-move") {
                     if (json.roomId) {
                         let gameLogic = GameLogic.getInstance(this.rooms);
                         if (gameLogic.makeMove(json.roomId, parseInt(json.message), json.sender_id)) {
-                            this.rooms[json.roomId].sendSocketToParticipants(JSON.stringify({action: "new-move", "board": this.rooms[json.roomId].getBoard}));
+                            this.rooms[json.roomId].sendSocketToParticipants(JSON.stringify({ action: "new-move", "board": this.rooms[json.roomId].getBoard }));
+                            this.newMove(json.sender_id, json.roomId, parseInt(json.message));
                         } else {
-                            this.rooms[json.roomId].sendSocketToParticipants(JSON.stringify({action: "error", message: "Coup impossible"}));
+                            this.rooms[json.roomId].sendSocketToParticipants(JSON.stringify({ action: "error", message: "Coup impossible" }));
                         }
                         let checkForWin = gameLogic.checkForWin(json.roomId);
-                        if (checkForWin) this.rooms[json.roomId].sendSocketToParticipants(JSON.stringify({action: "end-game", winner: checkForWin}));
+                        if (checkForWin) {
+                            this.rooms[json.roomId].sendSocketToParticipants(JSON.stringify({ action: "end-game", winner: checkForWin }));
+                            await getConnection()
+                                .createQueryBuilder()
+                                .update(Room)
+                                .set({ who_win: (checkForWin == -1) ? "N" : checkForWin.toString() })
+                                .where("id = :id", { id: json.roomId })
+                                .execute();
+                        };
                     }
                 } else if (json.action == "restart") {
                     this.rooms[json.roomId].restartGame();
-                    this.rooms[json.roomId].sendSocketToParticipants(JSON.stringify({action: "restart", "board": this.rooms[json.roomId].getBoard}));
+                    this.rooms[json.roomId].sendSocketToParticipants(JSON.stringify({ action: "restart", "board": this.rooms[json.roomId].getBoard }));
                 }
             });
         });
@@ -110,6 +119,16 @@ export class SocketServer {
         const preUserToQueue: Queue = new Queue(currentUser, new Date());
         const newUserToQueue: Queue = await repository.save(preUserToQueue)
         return newUserToQueue;
+    }
+
+    private newMove = async (user_id: number, room_id: number, col: number) => {
+        LOGGER.debug("New move")
+        const repository = getManager();
+        const currentUser: User = await repository.findOne(User, user_id);
+        const currentRoom: Room = await repository.findOne(Room, room_id);
+        const preNewMove: GameMove = new GameMove(currentUser, currentRoom, col);
+        const newNewMove: GameMove = await repository.save(preNewMove)
+        return newNewMove;
     }
 
     private userLeave = async (userId: number, roomId: number) => {
@@ -154,7 +173,7 @@ export class SocketServer {
         let room: Room = new Room();
         for (let index = 0; index < idsOfPlayers.length; index++) {
             let participant: Participant = this.participantsInQueue.find((participant: Participant) => participant.id === idsOfPlayers[index]);
-            participant.ws.send(JSON.stringify({ "action": "new-room", "roomId": roomId, "isTurnOf": idsOfPlayers[0]}));
+            participant.ws.send(JSON.stringify({ "action": "new-room", "roomId": roomId, "isTurnOf": idsOfPlayers[0] }));
             room.addNewParticipantIntoTheRoom(roomId, participant);
             // Remove participant of global participant
             this.participantsInQueue.splice(this.participantsInQueue.findIndex(function (participant) {

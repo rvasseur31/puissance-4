@@ -1,6 +1,5 @@
 import { User } from '../entities/User.entity';
 import { GameMove } from '../entities/GameMove.entity';
-import { Message } from '../entities/Message.entity';
 
 export interface IRoom {
     /**
@@ -14,14 +13,9 @@ export interface IRoom {
     users: User[];
     
     /**
-     * Char [1, 2, N, NULL]
+     * Char [user_id, N, NULL]
      */
     who_win: string;
-
-    /**
-     * Messages of the room.
-     */
-    messages: Message[]
 
     /**
      * List of users moves

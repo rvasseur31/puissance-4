@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, ManyToMany, ManyToOne } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, ManyToOne } from "typeorm";
 import { IGameMove } from '../types/IGameMove';
 import { User } from "./User.entity";
 import { Room } from './Room.entity';
@@ -17,8 +17,7 @@ export class GameMove implements IGameMove {
     /**
      * Id of the user who played.
      */
-    @OneToOne(type => User)
-    @JoinColumn()
+    @ManyToOne(type => User, user => user.gameMoves)
     user: User;
 
     /**
@@ -31,7 +30,16 @@ export class GameMove implements IGameMove {
      * User move.
      */
     @Column()
-    move: string;
+    move: number;
+
+    /**
+     * Constructor.
+     */
+    constructor(user:User, room:Room, col:number) {
+        this.user = user;
+        this.room = room;
+        this.move = col;
+    }
 }
 
 

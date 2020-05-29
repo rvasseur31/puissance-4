@@ -11,15 +11,14 @@ createConnection({
     "type": "mysql",
     "host": "remotemysql.com",
     "port": 3306,
-    "username": "vCrjHIpYzE",
-    "password": "O7pwPcBop3",
-    "database": "vCrjHIpYzE",
+    "username": "pYt5j8LscQ",
+    "password": "H4aexHC0AF",
+    "database": "pYt5j8LscQ",
     "entities": [
-        "dist/src/entities/*.js"
-    ]
+        "dist/src/entities/*.entity.js"
+    ],
+    synchronize: true
 }).then(async connection => {
-    // Synchronize tables in database.
-    await connection.synchronize();
     /**
      * Logger.
      */

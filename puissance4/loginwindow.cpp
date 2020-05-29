@@ -3,6 +3,10 @@
 
 #include<QDebug>
 
+/**
+ * @brief LoginWindow::LoginWindow: initialize network manager
+ * @param parent: Qwidget
+ */
 LoginWindow::LoginWindow(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::LoginWindow)
 {
@@ -12,6 +16,9 @@ LoginWindow::LoginWindow(QWidget *parent) :
     connect(networkManager,SIGNAL(finished(QNetworkReply*)), SLOT(onResult(QNetworkReply*)));
 }
 
+/**
+ * @brief LoginWindow::~LoginWindow: delete the window
+ */
 LoginWindow::~LoginWindow()
 {
     qDebug() << __FUNCTION__<< "Destructor";
@@ -19,6 +26,9 @@ LoginWindow::~LoginWindow()
     if (game != nullptr) delete game;
 }
 
+/**
+ * @brief LoginWindow::on_pushButtonSignIn_clicked: send to the server all informations needed for sign in or sign up
+ */
 void LoginWindow::on_pushButtonSignIn_clicked()
 {
     QString email = ui->lineEditUsername->text();
@@ -48,6 +58,11 @@ void LoginWindow::on_pushButtonSignIn_clicked()
     networkManager->post(request, QJsonDocument(jsObj).toJson());
     ui->statusbar->showMessage("Authenticating on " + serverUrl + route + " ...");
 }
+
+/**
+ * @brief LoginWindow::setLoginMode : Edit view if user wanted to sign in or sign up
+ * @param action : bool
+ */
 void LoginWindow::setLoginMode(bool action) {
     if (action) {
         ui->groupBoxSignIn->setTitle("Sign In");
@@ -72,6 +87,10 @@ void LoginWindow::on_pushButtonSignUp_clicked()
     setLoginMode(!loginMode);
 }
 
+/**
+ * @brief LoginWindow::onResult: result of the auth request, launch mainwindow is success, otherwise show error message
+ * @param reply
+ */
 void LoginWindow::onResult(QNetworkReply *reply) {
     qDebug() << __FUNCTION__ << reply;
     ui->statusbar->showMessage("");
@@ -97,65 +116,4 @@ void LoginWindow::onResult(QNetworkReply *reply) {
 void LoginWindow::on_lineEditPassword_returnPressed()
 {
     on_pushButtonSignIn_clicked();
-}
-
-void LoginWindow::on_pushButtonJer_clicked()
-{
-    QString email = "jer@gmail.com";
-    QString password = "jer";
-
-    qDebug() << __FUNCTION__ << "Username : " << email << ", Password : " << password;
-    if (email == "" || password == "") {
-        ui->statusbar->showMessage("You should provide a login and a password");
-        return;
-    }
-    QJsonObject jsObj;
-    jsObj["email"] = email;
-    if (!loginMode)
-        jsObj["pseudo"] = "pseudo";
-    jsObj["password"] = password;
-    QString route;
-    if (loginMode){
-        route = "auth/login";
-    }
-    else {
-        route = "auth/register";
-    }
-    QUrl url(serverUrl + route);
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-
-    networkManager->post(request, QJsonDocument(jsObj).toJson());
-    ui->statusbar->showMessage("Authenticating on " + serverUrl + route + " ...");
-}
-
-
-void LoginWindow::on_pushButtonRaf_clicked()
-{
-    QString email = "raf@gmail.com";
-    QString password = "raf";
-
-    qDebug() << __FUNCTION__ << "Username : " << email << ", Password : " << password;
-    if (email == "" || password == "") {
-        ui->statusbar->showMessage("You should provide a login and a password");
-        return;
-    }
-    QJsonObject jsObj;
-    jsObj["email"] = email;
-    if (!loginMode)
-        jsObj["pseudo"] = "pseudo";
-    jsObj["password"] = password;
-    QString route;
-    if (loginMode){
-        route = "auth/login";
-    }
-    else {
-        route = "auth/register";
-    }
-    QUrl url(serverUrl + route);
-    QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-
-    networkManager->post(request, QJsonDocument(jsObj).toJson());
-    ui->statusbar->showMessage("Authenticating on " + serverUrl + route + " ...");
 }

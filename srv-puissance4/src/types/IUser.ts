@@ -1,6 +1,4 @@
-import { Message } from '../entities/Message.entity';
 import { Room } from '../entities/Room.entity';
-import { Queue } from '../entities/Queue.entity';
 
 export interface IUser {
     /**
@@ -22,11 +20,6 @@ export interface IUser {
      * User pseudo.
      */
     pseudo?: string;
-
-    /**
-     * User messages.
-     */
-    messages: Message[];
 
     /**
      * Current user room.

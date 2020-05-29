@@ -1,6 +1,5 @@
 import { IRoom } from '../types/IRoom';
-import { Message } from './Message.entity';
-import { OneToMany, OneToOne, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { OneToMany, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { GameMove } from './GameMove.entity';
 import { User } from './User.entity';
 import { Participant } from './Participant';
@@ -26,12 +25,6 @@ export class Room implements IRoom {
     who_win: string;
 
     /**
-     * Messages of the room.
-     */
-    @OneToMany(type => Message, message => message.room)
-    messages: Message[]
-
-    /**
      * List of users moves
      */
     @OneToMany(type => GameMove, gameMove => gameMove.room)
@@ -46,6 +39,11 @@ export class Room implements IRoom {
      * Board of the game, two dimentinal array.
      */
     private board: number[][] = [];
+
+    /**
+     * Number of move
+     */
+    private numberOfMove:number = 0;
 
     /**
      * Constructor.
@@ -77,6 +75,7 @@ export class Room implements IRoom {
             }
             this.board.push(row);
         }
+        this.numberOfMove = 0;
     }
 
     public addNewParticipantIntoTheRoom = (roomId: number, participant: Participant): void => {

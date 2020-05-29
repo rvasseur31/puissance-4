@@ -17,7 +17,7 @@ class LoginWindow : public QMainWindow
     Q_OBJECT
     QNetworkAccessManager *networkManager;
     bool loginMode = true;
-    QString serverUrl = "https://projet-logiciel.herokuapp.com/api/";
+    QString serverUrl = "http://192.168.1.33:3000/api/";
     MainWindow *game = nullptr;
 public:
     explicit LoginWindow(QWidget *parent = nullptr);
@@ -29,14 +29,8 @@ private slots:
     void on_pushButtonSignUp_clicked();
 
     void onResult(QNetworkReply *reply);
+
     void on_lineEditPassword_returnPressed();
-
-
-
-    void on_pushButtonJer_clicked();
-
-    void on_pushButtonRaf_clicked();
-
 private:
     Ui::LoginWindow *ui;
     void setLoginMode(bool action);

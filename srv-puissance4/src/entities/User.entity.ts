@@ -1,8 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn } from "typeorm";
 import { IUser } from '../types/IUser'
 import { Room } from './Room.entity';
-import { Message } from './Message.entity';
-import { Queue } from './Queue.entity';
+import { GameMove } from './GameMove.entity';
 
 /**
  * User entity.
@@ -33,14 +32,6 @@ export class User implements IUser {
     @Column({ unique: true })
     pseudo: string;
 
-    /**
-     * User messages.
-     */
-    @OneToMany(type => Message, message => message.user, {
-        nullable: true
-    })
-    messages: Message[];
-
 
     @Column({ nullable: true })
     roomId: number;
@@ -53,6 +44,12 @@ export class User implements IUser {
     })
     @JoinColumn()
     room: Room;
+
+    /**
+     * List of users moves
+     */
+    @OneToMany(type => GameMove, gameMove => gameMove.user)
+    gameMoves: GameMove[]
 
     /**
      * Constructor.

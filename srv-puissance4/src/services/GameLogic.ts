@@ -55,6 +55,7 @@ export class GameLogic {
                 break;
             }
         }
+        this.rooms[roomId].numberOfMove++;
         return move_made;
     }
 
@@ -64,6 +65,9 @@ export class GameLogic {
         let winner_coins = [];
         let winner = 0;
         let person = 0;
+        /*Check if null game */
+        if (this.rooms[roomId].numberOfMove == 5) return -1;
+
         /*horizontal*/
         for (let row = 0; row < board.length; row++) {
             if (winner) break;
