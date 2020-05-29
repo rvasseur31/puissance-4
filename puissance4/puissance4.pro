@@ -17,15 +17,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     loginwindow.cpp \
     main.cpp \
-    mainwindow.cpp \
-    matrixgame.cpp \
-    participant.cpp
+    mainwindow.cpp
 
 HEADERS += \
     loginwindow.h \
-    mainwindow.h \
-    matrixgame.h \
-    participant.h
+    mainwindow.h
 
 FORMS += \
     loginwindow.ui \

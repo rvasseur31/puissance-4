@@ -95,16 +95,6 @@ void MainWindow::participantLeft(const QString &nick)
     ui->textEdit_users_messages->setTextColor(color);
 }
 
-void MainWindow::showInformation()
-{
-    if (ui->listWidget->count() == 1) {
-        QMessageBox::information(this, tr("Chat"),
-                                 tr("Launch several instances of this "
-                                    "program on your local network and "
-                                    "start chatting!"));
-    }
-}
-
 void MainWindow::isConnected()
 {
     m_webSocket->sendTextMessage(sendSocketData("new-participant",userData["id"].toInt(), userData["pseudo"].toString(), userData["roomId"].toInt(), ""));
