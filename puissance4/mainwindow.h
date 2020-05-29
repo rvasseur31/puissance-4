@@ -57,7 +57,7 @@ private slots:
 private:
     bool m_debug = true;
     QWebSocket *m_webSocket;
-    QUrl url = QUrl(QStringLiteral("ws://192.168.1.33:3000/"));
+    QUrl url = QUrl(QStringLiteral("ws://projet-logiciel.herokuapp.com/"));
     QTextTableFormat tableFormat;
     Ui::MainWindow *ui; 
 

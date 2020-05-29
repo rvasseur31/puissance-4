@@ -66,7 +66,7 @@ export class GameLogic {
         let winner = 0;
         let person = 0;
         /*Check if null game */
-        if (this.rooms[roomId].numberOfMove == 5) return -1;
+        if (this.rooms[roomId].numberOfMove == 42) return -1;
 
         /*horizontal*/
         for (let row = 0; row < board.length; row++) {
