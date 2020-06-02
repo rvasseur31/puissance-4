@@ -39,6 +39,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(m_webSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(logError(QAbstractSocket::SocketError)));
     connect(m_webSocket, SIGNAL(textMessageReceived(QString)), this, SLOT(newMessage(QString)));
     appendMessage("Puissance 4", "Vous êtes les bleus");
+
+    ui->pushButton_1->setFixedHeight(75);
+    ui->pushButton_1->setFixedWidth(75);
 }
 
 /**
@@ -185,6 +188,7 @@ void MainWindow::newMessage(QString msg)
         ui->pushButton_restart->setHidden(true);
         ui->label_status->setText("En attente du coup adverse");
         if (json["isTurnOf"].toInt() == userData["id"].toInt()) setIsMyTurnToPlay();
+        qDebug() << __LINE__ << isMyTurnToPlay;
     } else if (json["action"] == "leave-room") {
         userData["roomId"] = 0;
         ui->label_status->setText("En attente d'un adversaire");
@@ -192,6 +196,7 @@ void MainWindow::newMessage(QString msg)
         matrixArray = json["board"].toArray();
         generateBoard(matrixArray);
         setIsMyTurnToPlay();
+        qDebug() << __LINE__ << isMyTurnToPlay;
     } else if (json["action"] == "end-game") {
         isGameFinished = true;
         ui->pushButton_restart->setHidden(false);
@@ -312,6 +317,8 @@ void MainWindow::generateBoard(QJsonArray matrix){
     for(int i = 0; i < matrix.size(); i++){
         for(int j = 0; j < matrix[i].toArray().size(); j++){
             QPushButton* boardElement = new QPushButton("");
+            boardElement->setFixedHeight(75);
+            boardElement->setFixedWidth(75);
             if (matrix[i].toArray()[j].toInt() == 0) boardElement->setStyleSheet("QPushButton {background-color: #FFFFFF}");
             else if (matrix[i].toArray()[j].toInt() == userData["id"].toInt()) boardElement->setStyleSheet("QPushButton {background-color: #3333FF}");
             else boardElement->setStyleSheet("QPushButton {background-color: #FF3333}");

@@ -81,7 +81,11 @@
           <widget class="QPushButton" name="pushButton_4">
            <property name="styleSheet">
             <string notr="true">QPushButton {
-     background-color: grey;
+    background-color: grey;
+	min-width: 75;
+	max-width: 75;
+    min-height: 75;
+	max-height: 75;
  }</string>
            </property>
            <property name="text">
@@ -93,10 +97,11 @@
           <widget class="QPushButton" name="pushButton_2">
            <property name="styleSheet">
             <string notr="true">QPushButton {
-     background-color: grey;
- }
- QPushButton:pressed {
-     background-color: blue;    
+    background-color: grey;
+	min-width: 75;
+	max-width: 75;
+    min-height: 75;
+	max-height: 75;
  }</string>
            </property>
            <property name="text">
@@ -108,7 +113,11 @@
           <widget class="QPushButton" name="pushButton_6">
            <property name="styleSheet">
             <string notr="true">QPushButton {
-     background-color: grey;
+    background-color: grey;
+	min-width: 75;
+	max-width: 75;
+    min-height: 75;
+	max-height: 75;
  }</string>
            </property>
            <property name="text">
@@ -120,7 +129,11 @@
           <widget class="QPushButton" name="pushButton_7">
            <property name="styleSheet">
             <string notr="true">QPushButton {
-     background-color: grey;
+    background-color: grey;
+	min-width: 75;
+	max-width: 75;
+    min-height: 75;
+	max-height: 75;
  }</string>
            </property>
            <property name="text">
@@ -132,7 +145,11 @@
           <widget class="QPushButton" name="pushButton_3">
            <property name="styleSheet">
             <string notr="true">QPushButton {
-     background-color: grey;
+    background-color: grey;
+	min-width: 75;
+	max-width: 75;
+    min-height: 75;
+	max-height: 75;
  }</string>
            </property>
            <property name="text">
@@ -144,7 +161,11 @@
           <widget class="QPushButton" name="pushButton_5">
            <property name="styleSheet">
             <string notr="true">QPushButton {
-     background-color: grey;
+    background-color: grey;
+	min-width: 75;
+	max-width: 75;
+    min-height: 75;
+	max-height: 75;
  }</string>
            </property>
            <property name="text">
@@ -156,10 +177,11 @@
           <widget class="QPushButton" name="pushButton_1">
            <property name="styleSheet">
             <string notr="true">QPushButton {
-     background-color: grey;
- }
- QPushButton:pressed {
-     background-color: rgb(224, 0, 0);    
+    background-color: grey;
+	min-width: 75;
+	max-width: 75;
+    min-height: 75;
+	max-height: 75;
  }</string>
            </property>
            <property name="text">
